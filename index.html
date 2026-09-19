@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050508" />
+  <title>جدول تناوبی سه‌بعدی مندلیف | Liquid Glass Periodic Table</title>
+  <meta name="description" content="جدول تناوبی تعاملی سه‌بعدی شامل تمام ۱۱۸ عنصر: هفت چیدمان سه‌بعدی، نقشه‌های حرارتی داده، مقایسه عناصر و حالت آزمون — با موتور Three.js و طراحی شیشه‌ای." />
+  <link rel="canonical" href="https://jdwl-mndlyf.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="جدول تناوبی سه‌بعدی مندلیف" />
+  <meta property="og:description" content="۱۱۸ عنصر، هفت چیدمان سه‌بعدی، نقشه حرارتی داده‌ها، مقایسه و آزمون — کاملاً تعاملی در مرورگر." />
+  <meta property="og:locale" content="fa_IR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Ccircle%20cx='32'%20cy='32'%20r='8'%20fill='%2306b6d4'/%3E%3Cellipse%20cx='32'%20cy='32'%20rx='28'%20ry='12'%20fill='none'%20stroke='%238b5cf6'%20stroke-width='3'/%3E%3Cellipse%20cx='32'%20cy='32'%20rx='12'%20ry='28'%20fill='none'%20stroke='%23ec4899'%20stroke-width='3'/%3E%3C/svg%3E" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&family=Orbitron:wght@600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- ============ صحنه سه‌بعدی ============ -->
+  <div id="scene-container" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="scanline" class="scanline" aria-hidden="true"></div>
+
+  <!-- ============ لودر ============ -->
+  <div id="loader" class="loader">
+    <div class="loader-orbit">
+      <span class="loader-core"></span>
+      <span class="loader-ring r1"></span>
+      <span class="loader-ring r2"></span>
+      <span class="loader-ring r3"></span>
+    </div>
+    <h2 class="loader-title">جدول تناوبی سه‌بعدی</h2>
+    <p class="loader-status" id="loader-status">در حال آماده‌سازی صحنه…</p>
+    <p class="loader-sub">۱۱۸ عنصر · ۷ چیدمان سه‌بعدی · ۹ نقشه داده</p>
+    <div class="loader-bar" aria-hidden="true"><span></span></div>
+  </div>
+
+  <!-- ============ نوار فرمان شناور ============ -->
+  <header id="command-bar">
+    <button id="brand-logo" class="glass" type="button" title="جدول تناوبی سه‌بعدی مندلیف — راهنما" aria-label="درباره برنامه و راهنما">
+      <span class="brand-mark" aria-hidden="true"></span>
+    </button>
+
+    <div class="cmd-core glass">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.6-3.6" /></svg>
+        <input id="search-input" type="search" inputmode="search" autocomplete="off" spellcheck="false"
+               placeholder="جستجو: نام، نماد یا عدد اتمی…" aria-label="جستجوی عنصر" />
+        <button id="search-clear" class="icon-btn tiny" type="button" title="پاک کردن جستجو" aria-label="پاک کردن جستجو">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
+      <div id="result-count" class="count-badge" role="status">۱۱۸ / ۱۱۸</div>
+      <button id="filter-toggle" class="cmd-btn" type="button" aria-pressed="false" title="فیلتر دسته‌ها" aria-label="باز و بسته کردن فیلتر دسته‌بندی">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+      </button>
+
+      <!-- پیشنهادهای زنده جستجو -->
+      <div id="suggest" class="suggest glass" role="listbox" aria-label="نتایج جستجو" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <!-- ============ تری فیلتر دسته‌بندی‌ها ============ -->
+  <div id="filters-tray" class="glass collapsed">
+    <div class="tray-head">
+      <span>فیلتر دسته‌بندی</span>
+      <button id="filters-reset" class="tray-link" type="button">نمایش همه</button>
+    </div>
+    <nav id="filters" aria-label="فیلتر دسته‌بندی عناصر"></nav>
+  </div>
+
+  <!-- ============ ریل انتخاب چیدمان سه‌بعدی ============ -->
+  <nav id="layout-rail" class="glass" aria-label="چیدمان جدول">
+    <span class="rail-title">چیدمان</span>
+    <div class="rail-body" id="layout-buttons"></div>
+  </nav>
+
+  <!-- ============ پنل بینش: دسته‌بندی‌ها یا نقشه داده ============ -->
+  <section id="legend" class="glass" aria-label="راهنمای رنگ و نقشه داده">
+    <div class="legend-tabs" role="tablist">
+      <button class="ltab active" type="button" role="tab" aria-selected="true" data-tab="cat">دسته‌ها</button>
+      <button class="ltab" type="button" role="tab" aria-selected="false" data-tab="data">نقشه داده</button>
+    </div>
+
+    <div class="legend-pane" id="pane-cat">
+      <ul id="legend-list"></ul>
+    </div>
+
+    <div class="legend-pane is-hidden" id="pane-data">
+      <label class="field-label" for="prop-select">رنگ کارت‌ها بر پایه:</label>
+      <select id="prop-select" class="mini-select" aria-label="انتخاب ویژگی نقشه حرارتی">
+        <option value="">— بدون نقشه (رنگ دسته‌ها) —</option>
+      </select>
+      <div class="heat-bar" id="heat-bar" aria-hidden="true"></div>
+      <div class="heat-ends" dir="ltr"><span id="heat-min">—</span><span id="heat-max">—</span></div>
+      <p class="heat-note" id="heat-note">یک ویژگی را انتخاب کنید تا هر ۱۱۸ کارت بر پایه مقدار آن رنگ بگیرند.</p>
+      <ul class="heat-top" id="heat-top"></ul>
+    </div>
+  </section>
+
+  <!-- ============ تری مقایسه ============ -->
+  <div id="compare-tray" class="glass is-hidden" aria-label="عناصر انتخاب‌شده برای مقایسه">
+    <div class="cmp-slots" id="cmp-slots"></div>
+    <div class="cmp-actions">
+      <button id="cmp-open" class="soft-btn" type="button" disabled>مقایسه کن</button>
+      <button id="cmp-clear" class="tray-link" type="button">پاک کردن</button>
+    </div>
+  </div>
+
+  <!-- ============ نوار آزمون ============ -->
+  <div id="quiz" class="glass is-hidden" aria-live="polite">
+    <div class="quiz-head">
+      <span class="quiz-badge">آزمون</span>
+      <div class="quiz-stats" dir="ltr">
+        <span title="امتیاز">★ <b id="quiz-score">0</b></span>
+        <span title="پاسخ‌های پیاپی درست">⚡ <b id="quiz-streak">0</b></span>
+        <span title="زمان باقی‌مانده">⏱ <b id="quiz-time">20</b></span>
+      </div>
+      <button id="quiz-exit" class="icon-btn tiny" type="button" aria-label="پایان آزمون">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </div>
+    <p class="quiz-q" id="quiz-question">…</p>
+    <div class="quiz-bar"><span id="quiz-bar-fill"></span></div>
+    <div class="quiz-foot">
+      <span class="quiz-hint" id="quiz-feedback">کارت درست را روی صحنه پیدا کن و کلیک کن</span>
+      <button id="quiz-skip" class="tray-link" type="button">رد کردن</button>
+    </div>
+  </div>
+
+  <!-- ============ تولتیپ Hover ============ -->
+  <div id="tooltip" class="tooltip glass" aria-hidden="true"></div>
+
+  <!-- ============ پنل جزئیات عنصر ============ -->
+  <aside id="panel" class="glass panel" aria-hidden="true" aria-label="جزئیات عنصر">
+    <button id="panel-close" class="icon-btn panel-close" type="button" aria-label="بستن پنل جزئیات">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+
+    <div class="panel-head">
+      <div class="panel-symbol" id="panel-symbol">H</div>
+      <div class="panel-titles">
+        <div class="panel-number">عدد اتمی <b id="panel-number">1</b></div>
+        <h2 id="panel-name-fa">هیدروژن</h2>
+        <p id="panel-name-en">Hydrogen</p>
+        <span class="cat-badge" id="panel-category">نافلز</span>
+        <span class="block-badge" id="panel-block">بلوک s</span>
+        <span class="radio-badge is-hidden" id="panel-radioactive">پرتوزا</span>
+      </div>
+    </div>
+
+    <p class="fact-card" id="panel-fact"></p>
+
+    <div class="bohr-wrap">
+      <canvas id="bohr" width="720" height="400" aria-label="نمودار لایه‌های الکترونی"></canvas>
+      <span class="bohr-caption" id="bohr-caption">لایه‌های الکترونی</span>
+    </div>
+
+    <!-- دماسنج ذوب و جوش -->
+    <div class="thermo" id="thermo" dir="ltr" hidden>
+      <div class="thermo-track" aria-hidden="true">
+        <div class="thermo-zone" id="thermo-zone"></div>
+        <span class="thermo-tick" id="thermo-melt"></span>
+        <span class="thermo-tick boil" id="thermo-boil"></span>
+        <span class="thermo-room" id="thermo-room"></span>
+      </div>
+      <div class="thermo-labels" aria-hidden="true">
+        <span>ذوب</span><span>دمای اتاق</span><span>جوش</span>
+      </div>
+    </div>
+
+    <!-- جایگاه عنصر روی بازه هر ویژگی، نسبت به همه ۱۱۸ عنصر -->
+    <div class="rank-block">
+      <h3 class="mini-head">جایگاه میان ۱۱۸ عنصر</h3>
+      <div id="panel-ranks"></div>
+    </div>
+
+    <dl class="props" id="panel-props"></dl>
+
+    <footer class="panel-foot">
+      <div class="panel-nav-row">
+        <button class="panel-nav-btn" id="panel-prev" type="button" title="عنصر قبلی" aria-label="عنصر قبلی">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          <span id="panel-prev-label">عنصر قبلی</span>
+        </button>
+        <button class="panel-nav-btn" id="panel-next" type="button" title="عنصر بعدی" aria-label="عنصر بعدی">
+          <span id="panel-next-label">عنصر بعدی</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="panel-actions">
+        <button class="soft-btn" id="panel-focus" type="button">تمرکز دوربین</button>
+        <button class="soft-btn" id="panel-compare" type="button">افزودن به مقایسه</button>
+        <button class="soft-btn ghost" id="panel-share" type="button" title="کپی لینک مستقیم این عنصر" aria-label="اشتراک‌گذاری لینک عنصر">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg>
+        </button>
+        <a class="soft-btn ghost" id="panel-wiki" href="#" target="_blank" rel="noopener noreferrer" title="مقاله این عنصر در ویکی‌پدیا فارسی" aria-label="مقاله ویکی‌پدیا">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5" /><path d="M19 5l-8.5 8.5" /><path d="M19 13.5V19H5V5h5.5" /></svg>
+        </a>
+      </div>
+    </footer>
+  </aside>
+
+  <!-- ============ نوار کنترل پایین ============ -->
+  <div id="controls" class="glass" role="toolbar" aria-label="کنترل‌های دوربین">
+    <button class="ctrl" id="btn-rotate" type="button" data-label="چرخش خودکار (R)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.3" /><path d="M21 3.5V9h-5.5" /></svg>
+    </button>
+    <button class="ctrl" id="btn-reset" type="button" data-label="بازنشانی دوربین (0)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2.5v3.2M12 18.3v3.2M2.5 12h3.2M18.3 12h3.2" /></svg>
+    </button>
+    <button class="ctrl" id="btn-random" type="button" data-label="عنصر تصادفی (Space)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5" /><circle cx="8.8" cy="8.8" r="1.15" fill="currentColor" stroke="none" /><circle cx="15.2" cy="8.8" r="1.15" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none" /><circle cx="8.8" cy="15.2" r="1.15" fill="currentColor" stroke="none" /><circle cx="15.2" cy="15.2" r="1.15" fill="currentColor" stroke="none" /></svg>
+    </button>
+    <button class="ctrl hide-sm" id="btn-view" type="button" data-label="نمای سینمایی" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.6v8.8L12 21l-8-4.6V7.6L12 3z" /><path d="M12 12l8-4.4M12 12v9M12 12L4 7.6" /></svg>
+    </button>
+    <button class="ctrl hide-sm" id="btn-zoom-in" type="button" data-label="بزرگ‌نمایی">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.6-3.6M11 8.2v5.6M8.2 11h5.6" /></svg>
+    </button>
+    <button class="ctrl hide-sm" id="btn-zoom-out" type="button" data-label="کوچک‌نمایی">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.6-3.6M8.2 11h5.6" /></svg>
+    </button>
+
+    <span class="ctrl-divider" aria-hidden="true"></span>
+
+    <button class="ctrl" id="btn-layout" type="button" data-label="چیدمان بعدی (Tab)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 17.5h7M17.5 14v7"/></svg>
+    </button>
+    <button class="ctrl" id="btn-tour" type="button" data-label="تور خودکار عناصر (P)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5l10 6.5-10 6.5z" /></svg>
+    </button>
+    <button class="ctrl" id="btn-compare" type="button" data-label="حالت مقایسه (C)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16" /><path d="M4 8h5M4 8l2.5-2.5M4 8l2.5 2.5" /><path d="M20 16h-5M20 16l-2.5-2.5M20 16l-2.5 2.5" /></svg>
+    </button>
+    <button class="ctrl" id="btn-quiz" type="button" data-label="حالت آزمون (Q)" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.5a2 2 0 0 1 2-2H18a1.5 1.5 0 0 1 1.5 1.5v14A1.5 1.5 0 0 1 18 20.5H6.5a2 2 0 0 1-2-2z" /><path d="M9.6 9.2a2.4 2.4 0 1 1 3.4 2.2c-.7.4-1 .9-1 1.6" /><circle cx="12" cy="16.2" r=".85" fill="currentColor" stroke="none" /></svg>
+    </button>
+
+    <span class="ctrl-divider" aria-hidden="true"></span>
+
+    <button class="ctrl" id="btn-legend" type="button" data-label="راهنمای رنگ‌ها (L)" aria-pressed="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z" /><path d="M3 13l9 5 9-5" /></svg>
+    </button>
+    <button class="ctrl" id="btn-sound" type="button" data-label="صدا" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.5h3.2L13 5.5v13l-4.8-4H5z" /><path class="wave" d="M16.4 9.2a4 4 0 0 1 0 5.6M18.9 6.8a7.5 7.5 0 0 1 0 10.4" /></svg>
+    </button>
+    <button class="ctrl hide-sm" id="btn-shot" type="button" data-label="عکس از صحنه">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5h3l1.4-2.2h7.2L17 8.5h3v10H4z" /><circle cx="12" cy="13.2" r="3.4" /></svg>
+    </button>
+    <button class="ctrl" id="btn-help" type="button" data-label="راهنمای استفاده (؟)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9.4 9.2a2.6 2.6 0 1 1 3.7 2.4c-.8.4-1.1 1-1.1 1.8" /><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none" /></svg>
+    </button>
+    <button class="ctrl" id="btn-fullscreen" type="button" data-label="تمام‌صفحه (F)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5V4h5.5M20 14.5V20h-5.5M14.5 4H20v5.5M9.5 20H4v-5.5" /></svg>
+    </button>
+  </div>
+
+  <div id="fps" class="fps" aria-hidden="true">-- FPS</div>
+  <div id="mode-badge" class="mode-badge" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- ============ مودال مقایسه ============ -->
+  <div id="compare-modal" class="modal-backdrop" aria-hidden="true">
+    <div class="glass modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="cmp-title">
+      <button id="cmp-close" class="icon-btn panel-close" type="button" aria-label="بستن مقایسه">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+      <h2 id="cmp-title">مقایسه عناصر</h2>
+      <div id="cmp-body" class="cmp-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ مودال راهنما ============ -->
+  <div id="help" class="modal-backdrop" aria-hidden="true">
+    <div class="glass modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <button id="help-close" class="icon-btn panel-close" type="button" aria-label="بستن راهنما">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+      <h2 id="help-title">راهنمای استفاده</h2>
+      <ul class="help-list">
+        <li><b>چرخش صحنه:</b> درگ با کلیک چپ (یا یک انگشت روی موبایل)</li>
+        <li><b>زوم:</b> چرخ ماوس یا حرکت دو انگشتی (Pinch) · <b>Pan:</b> کلیک راست</li>
+        <li><b>انتخاب عنصر:</b> کلیک/تپ روی کارت برای باز شدن پنل جزئیات</li>
+        <li><b>جستجو:</b> کلید <kbd>/</kbd> · حرکت در نتایج با <kbd>↑</kbd> <kbd>↓</kbd> و انتخاب با <kbd>Enter</kbd></li>
+        <li><b>چیدمان بعدی:</b> کلید <kbd>Tab</kbd> · یا با ریل سمت راست، هفت چیدمان سه‌بعدی</li>
+        <li><b>نقشه داده:</b> در پنل راست، تب «نقشه داده» — رنگ کارت‌ها بر پایه هر ویژگی عددی</li>
+        <li><b>مقایسه:</b> کلید <kbd>C</kbd> · تا سه عنصر را کنار هم بگذارید</li>
+        <li><b>آزمون:</b> کلید <kbd>Q</kbd> · عنصر خواسته‌شده را روی صحنه پیدا کنید</li>
+        <li><b>تور خودکار:</b> کلید <kbd>P</kbd> · <b>عنصر تصادفی:</b> <kbd>Space</kbd></li>
+        <li><b>چرخش خودکار:</b> <kbd>R</kbd> · <b>بازنشانی:</b> <kbd>0</kbd> · <b>تمام‌صفحه:</b> <kbd>F</kbd></li>
+        <li><b>بستن هر پنل:</b> کلید <kbd>Esc</kbd></li>
+      </ul>
+      <p class="help-foot">داده‌ها بر پایه مقادیر استاندارد آیوپاک و منابع مرجع شیمی. لینک هر عنصر مستقیماً قابل اشتراک‌گذاری است.</p>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">برای اجرای این جدول تناوبی سه‌بعدی، لازم است JavaScript در مرورگر فعال باشد.</div>
+  </noscript>
+
+  <!-- ============ کتابخانه‌ها (CDN، بدون هیچ مرحله Build) ============ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- ============ Post-processing (Bloom + FXAA) برای درخشش نئونی واقعی ============ -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+  <!-- ============ کد برنامه (ES Modules) ============ -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

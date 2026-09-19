@@ -1,0 +1,28 @@
+{
+  "name": "جدول تناوبی سه‌بعدی مندلیف",
+  "short_name": "جدول تناوبی ۳بعدی",
+  "description": "جدول تناوبی تعاملی سه‌بعدی با ۱۱۸ عنصر، هفت چیدمان، نقشه حرارتی داده‌ها، مقایسه و آزمون.",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050508",
+  "theme_color": "#050508",
+  "categories": ["education", "science", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
