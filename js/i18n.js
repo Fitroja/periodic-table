@@ -210,7 +210,7 @@ export const TRANSLATIONS = {
   },
   abundance: {
     fa: 'فراوانی در پوسته زمین',
-    en: 'Abundance in Earth's crust',
+    en: "Abundance in Earth's crust",
     zh: '地壳丰度',
     ru: 'Содержание в земной коре',
   },
