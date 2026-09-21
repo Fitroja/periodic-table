@@ -1,0 +1,59 @@
+{
+  "name": "3d-periodic-table",
+  "version": "2.0.0",
+  "description": "Interactive 3D periodic table of elements with 118 elements, 7 spatial layouts, data heatmaps, comparison mode, and quiz game. Built with Three.js and vanilla JavaScript. Supports Persian, English, Chinese, and Russian.",
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 4173",
+    "preview": "python -m http.server 4173"
+  },
+  "keywords": [
+    "periodic-table",
+    "chemistry",
+    "3d",
+    "threejs",
+    "webgl",
+    "education",
+    "science",
+    "visualization",
+    "interactive",
+    "mendeleev",
+    "elements",
+    "i18n",
+    "multilingual",
+    "pwa"
+  ],
+  "author": {
+    "name": "Amir Abbas",
+    "email": "amirabbas91a@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fitroja/periodic-table.git"
+  },
+  "homepage": "https://github.com/Fitroja/periodic-table#readme",
+  "bugs": {
+    "url": "https://github.com/Fitroja/periodic-table/issues"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ],
+  "metadata": {
+    "elements": 118,
+    "layouts": 7,
+    "dataMaps": 9,
+    "languages": ["fa", "en", "zh", "ru"],
+    "webgl": true,
+    "pwa": true,
+    "frameworkless": true
+  }
+}

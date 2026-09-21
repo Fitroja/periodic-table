@@ -1,186 +1,310 @@
-# جدول تناوبی سه‌بعدی مندلیف — Liquid Glass Periodic Table
+# 3D Periodic Table | Interactive WebGL Chemistry Visualization
 
-یک وب‌اپلیکیشن تعاملی سه‌بعدی از جدول تناوبی عناصر، شامل تمام **۱۱۸ عنصر** با داده‌های واقعی، ساخته‌شده با **Vanilla JavaScript + Three.js**.
-بدون فریم‌ورک، بدون ابزار Build، بدون بک‌اند — ۱۰۰٪ Static و آماده انتشار روی Vercel.
+[![Three.js](https://img.shields.io/badge/Three.js-r128-06b6d4)](https://threejs.org/) [![JavaScript](https://img.shields.io/badge/JavaScript-ES2020-8b5cf6)](https://developer.mozilla.org/en-US/docs/Web/JavaScript) [![No Build](https://img.shields.io/badge/Build-None-ec4899)](https://github.com/Fitroja/periodic-table) [![Elements](https://img.shields.io/badge/Elements-118-eab308)](https://iupac.org/) [![Languages](https://img.shields.io/badge/Languages-4-10b981)](https://github.com/Fitroja/periodic-table)
 
-![tech](https://img.shields.io/badge/Three.js-r128-06b6d4) ![tech](https://img.shields.io/badge/JavaScript-ES2020_Modules-8b5cf6) ![tech](https://img.shields.io/badge/Build-None-ec4899) ![tech](https://img.shields.io/badge/Elements-118-eab308)
+An interactive 3D periodic table featuring all **118 chemical elements** with complete scientific data, built with **vanilla JavaScript + Three.js**. No frameworks, no build tools, no backend — 100% static and deployable anywhere.
+
+**Live Demo:** https://jdwl-mndlyf.vercel.app/
+
+![Periodic Table 3D Screenshot](https://img.shields.io/badge/WebGL-Powered-blue?style=for-the-badge&logo=webgl)
 
 ---
 
-## ✨ ویژگی‌ها
+## ✨ Features
 
-### صحنه سه‌بعدی
-- چیدمان استاندارد **۱۸ ستونی** جدول تناوبی در فضای سه‌بعدی، با ردیف‌های جداگانه لانتانیدها و آکتینیدها و پلاکِ نشانگر «۵۷–۷۱» و «۸۹–۱۰۳» در گروه ۳.
-- کنترل کامل دوربین با **OrbitControls**: چرخش، زوم، Pan و پشتیبانی کامل از لمس (یک‌انگشتی برای چرخش، Pinch برای زوم، دو‌انگشتی برای Pan).
-- **۹۰۰ ذره نورانی شناور** در پس‌زمینه (۵۰۰ ذره روی موبایل) با `THREE.Points` و بافت گرادیان شعاعی + Additive Blending.
-- سه **نور نقطه‌ای نئونی متحرک** (فیروزه‌ای، بنفش، صورتی) که روی کف نیمه‌بازتابنده (`metalness: 0.9`) بازتاب می‌دهند.
-- سه ابر نورانی (Nebula) با ضربان ملایم شفافیت + `Fog` برای عمق فضایی.
-- شناوری نرم و مستقل هر کارت با فاز اختصاصی (`Math.sin(time + phase)`).
+### 🎮 Interactive 3D Scene
+- **7 Spatial Layouts**: Classic table, wide form, block separation, Archimedean spiral, cylindrical helix, Fibonacci sphere, and relief map
+- **Full Camera Control**: Rotate, zoom, pan with mouse/touch using OrbitControls
+- **900 Floating Particles** in background (500 on mobile) with radial gradient texture
+- **3 Moving Neon Point Lights** (cyan, purple, pink) reflecting on semi-reflective floor
+- **Smooth Animations**: Independent floating motion for each card with unique phase
+- **Post-Processing**: Unreal Bloom Pass for authentic neon glow + FXAA anti-aliasing
 
-### استایل Liquid Glass
-- پس‌زمینه مشکی عمیق `#050508` + وینیت و هاله‌های رنگی CSS.
-- کارت‌های شیشه‌ای که بافت آن‌ها به‌صورت **رویه‌ای روی Canvas** ترسیم می‌شود: بدنه گرادیانی نیمه‌شفاف، Sheen بالایی، هاله نئونی دسته‌بندی، حاشیه نئونی بیرونی و خط ظریف داخلی.
-- تمام پنل‌های UI با `backdrop-filter: blur(26px) saturate(165%)`، حاشیه گرادیانی (تکنیک `mask-composite`) و سایه داخلی.
-- پالت نئونی به‌تفکیک دسته:
+### 💎 Liquid Glass Design
+- Deep black background `#050508` with CSS vignette and radial color halos
+- Glass cards with Canvas-rendered textures: gradient body, top sheen, neon category halo, outer neon border
+- All UI panels with `backdrop-filter: blur(26px) saturate(165%)` and gradient borders
+- Neon color palette by category (10 unique colors for element groups)
 
-| دسته | رنگ | دسته | رنگ |
-|---|---|---|---|
-| فلزهای قلیایی | `#ff3366` | هالوژن‌ها | `#ec4899` |
-| فلزهای قلیایی خاکی | `#ff9933` | گازهای نجیب | `#8b5cf6` |
-| فلزهای واسطه | `#3399ff` | لانتانیدها | `#eab308` |
-| فلزهای پس‌واسطه | `#a855f7` | آکتینیدها | `#f43f5e` |
-| شبه‌فلزها | `#10b981` | نافلزها | `#06b6d4` |
+### 🔍 Rich Interactions
+- **Hover**: Card scales and moves forward in Z-axis with intensified glow + smart tooltip
+- **Click**: Sliding glass panel with complete element data + **animated Bohr model** on Canvas showing electrons orbiting in K…Q shells
+- **Real-time Search**: Instant filtering by name (English/Persian/Chinese/Russian), symbol, or atomic number
+- **Category Filters**: Multi-select with smooth opacity and scale transitions
+- **Data Heatmaps**: Color all 118 cards by any numeric property (atomic mass, radius, electronegativity, ionization energy, melting/boiling point, density, abundance, discovery year)
+- **Comparison Mode**: Select up to 3 elements and view side-by-side property comparison with bars
+- **Quiz Mode**: Timed chemistry quiz with 6 question types, score tracking, and streak counter
+- **Auto Tour**: Automatic element showcase cycling through all 118 elements
 
-### تعاملات
-- **Hover** — کارت در محور Z جلو می‌آید، بزرگ می‌شود و هاله نئونی‌اش شدت می‌گیرد؛ همراه با تولتیپ شیشه‌ای هوشمند که از لبه‌های صفحه فرار می‌کند.
-- **Click** — پنل کشویی Liquid Glass با تمام مشخصات + **نمودار بور متحرک** روی Canvas که الکترون‌ها را در لایه‌های K…Q می‌چرخاند.
-- **Search** — جستجوی لحظه‌ای روی نام فارسی، نام لاتین، نماد و عدد اتمی. نتایج برجسته و بقیه عناصر محو می‌شوند و دوربین (با تأخیر ۳۰۰ms) روی نخستین نتیجه می‌نشیند. نرمال‌سازی فارسی/عربی (ی/ي، ک/ك، آ/ا) پشتیبانی می‌شود.
-- **Filters** — انتخاب چندگانه دسته‌ها با انیمیشن نرم تغییر شفافیت و مقیاس.
-- **کنترل‌ها** — چرخش خودکار، بازنشانی دوربین، زوم ±، نمایش/پنهان‌سازی راهنما، مودال راهنما و تمام‌صفحه.
+### 🌍 Multilingual Support
+- **4 Languages**: Persian (default), English, Chinese (Simplified), Russian
+- **RTL/LTR Support**: Automatic direction switching with proper typography
+- **Complete Translation**: All UI elements, element names, properties, and help text
+- **Language Switcher**: Elegant dropdown in top-right corner
 
-### کارایی
-- حلقه واحد `requestAnimationFrame` با `delta` محدودشده به ۵۰ms (بدون پرش پس از بازگشت از تب غیرفعال).
-- **یک Raycast در هر فریم** — نه در هر رویداد `pointermove`.
-- `PlaneGeometry` مشترک بین همه کارت‌ها و بافت هاله مشترک (کاهش شدید تعداد Geometry).
-- `pixelRatio` سقف‌دار (۲ روی دسکتاپ، ۱.۷۵ روی موبایل) و خاموش‌کردن Antialias روی موبایل.
-- توقف کامل حلقه رندر هنگام مخفی شدن تب.
-- نشانگر زنده FPS در گوشه صفحه.
+### ⚡ Performance
+- Single `requestAnimationFrame` loop with delta clamped to 50ms (no jumps after inactive tab)
+- **One raycast per frame** — not per pointermove event
+- Shared `PlaneGeometry` across all cards and shared halo texture (drastically reduces geometry count)
+- Capped `pixelRatio` (2× on desktop, 1.75× on mobile) and antialiasing disabled on mobile
+- Rendering stops completely when tab is hidden
+- Live FPS counter in corner
 
-### دسترس‌پذیری و پایداری
-- ساختار RTL کامل با `lang="fa"` و `dir="rtl"`، صفت‌های `aria-*` روی همه کنترل‌ها و `role="status"` برای شمارنده نتایج.
-- میان‌برهای کیبورد: `/` جستجو · `Esc` بستن · `R` چرخش · `0` بازنشانی · `+/-` زوم · `L` راهنما · `F` تمام‌صفحه.
-- احترام به `prefers-reduced-motion` و جانشین برای مرورگرهای بدون `backdrop-filter`.
-- تشخیص نبود WebGL یا خطای CDN با پیام فارسی روی صفحه لودر، و `<noscript>` برای JavaScript غیرفعال.
+### ♿ Accessibility & Robustness
+- Complete RTL structure with `lang` and `dir` attributes, `aria-*` labels on all controls
+- Keyboard shortcuts: `/` search · `Esc` close · `R` rotate · `0` reset · `+/-` zoom · `Tab` next layout · `Space` random · `Q` quiz · `C` compare · `F` fullscreen
+- Respects `prefers-reduced-motion` and provides fallback for browsers without `backdrop-filter`
+- WebGL detection with Persian error message on loader screen, `<noscript>` for disabled JavaScript
+- Service Worker for offline functionality (PWA-ready)
+
 ---
 
-## 📁 ساختار پروژه
+## 📊 Complete Data for All 118 Elements
 
+Each element includes:
+- Atomic number, symbol, English/Persian/Chinese/Russian names
+- Atomic mass (IUPAC standard values)
+- Category, period, group, electron configuration
+- Phase at room temperature (solid/liquid/gas)
+- Melting point, boiling point (in Kelvin with Celsius conversion)
+- Density, atomic radius, electronegativity, ionization energy
+- Abundance in Earth's crust
+- Discovery year and discoverer
+- Fascinating fact about the element
+- Calculated electron shells (K, L, M, N, O, P, Q)
+
+Data sources: IUPAC (2021 atomic masses), NIST, CRC Handbook of Chemistry and Physics
+
+---
+
+## 🏗️ Architecture
+
+### Project Structure
 ```
 .
-├── index.html              # اسکلت صفحه، UI و بارگذاری CDN
+├── index.html              # HTML skeleton, UI, and CDN loading
 ├── css/
-│   └── style.css           # تم تاریک، Liquid Glass، واکنش‌گرایی
+│   └── style.css           # Dark theme, Liquid Glass, responsive design
 ├── js/
-│   ├── periodic-data.js    # داده کامل ۱۱۸ عنصر + پالت + نگاشت شبکه
-│   ├── scene.js            # Three.js: کارت‌ها، دوربین، نور، ذرات، Raycast
-│   ├── ui.js               # جستجو، فیلتر، پنل جزئیات، نمودار بور، کنترل‌ها
-│   └── main.js             # راه‌اندازی، بررسی وابستگی‌ها، حلقه رندر
-└── README.md
+│   ├── periodic-data.js    # Complete data for 118 elements + palette + grid mapping
+│   ├── scene.js            # Three.js: cards, camera, lights, particles, raycast
+│   ├── ui.js               # Search, filters, detail panel, Bohr diagram, controls
+│   ├── layouts.js          # 7 3D spatial layout algorithms
+│   ├── audio.js            # Web Audio synthesized sound effects
+│   ├── i18n.js             # Internationalization system (4 languages)
+│   └── main.js             # Bootstrap, dependency check, render loop
+├── manifest.webmanifest    # PWA manifest
+├── sw.js                   # Service Worker for offline support
+└── package.json            # Metadata and keywords
 ```
 
-### تفکیک مسئولیت‌ها
+### Separation of Concerns
 
-| فایل | مسئولیت |
+| File | Responsibility |
 |---|---|
-| `periodic-data.js` | تنها منبع حقیقت داده. آرایه `RAW` فشرده (۱۵ فیلد در هر سطر) به `ELEMENTS` با کلید خوانا نگاشت می‌شود. توابع کمکی: `getGridPosition`، `shellsFor`، `formatTemperature`، `formatDensity`، `normalizeFa`. |
-| `scene.js` | کلاس `PeriodicScene`. صحنه، دوربین، نورها، ذرات، ۱۱۸ کارت، Raycast، انیمیشن دوربین و حلقه `update(dt)`. سه callback بیرونی: `onHover`، `onSelect`، `onBackgroundClick`. |
-| `ui.js` | کلاس `UI`. تمام DOM. صحنه را فقط از طریق API عمومی‌اش صدا می‌زند (`applyFilter`، `focusElement`، `select`، `zoomBy`…). |
-| `main.js` | چسب. بررسی WebGL و CDN، انتظار برای فونت‌ها، ساخت دو کلاس بالا، حلقه `requestAnimationFrame` و شمارش FPS. |
+| `periodic-data.js` | Single source of truth for data. Compressed `RAW` array (15 fields per row) mapped to readable `ELEMENTS`. Helper functions: `getGridPosition`, `shellsFor`, `formatTemperature`, `normalizeFa`. |
+| `scene.js` | `PeriodicScene` class. Scene, camera, lights, particles, 118 cards, raycast, camera animation, and `update(dt)` loop. Three external callbacks: `onHover`, `onSelect`, `onBackgroundClick`. |
+| `ui.js` | `UI` class. All DOM interactions. Calls scene only through public API (`applyFilter`, `focusElement`, `select`, `zoomBy`, etc.). |
+| `layouts.js` | Pure functions returning target states for each element: `{ x, y, z, rx, ry, rz, scale }`. Scene interpolates smoothly. |
+| `i18n.js` | Translation dictionary and language switching logic. Automatically updates `<html lang>` and `dir`. |
+| `main.js` | Glue code. Checks WebGL and CDN availability, waits for fonts, instantiates scene and UI, runs `requestAnimationFrame` loop with FPS counter. |
 
-**نکته معماری:** `scene.js` هیچ ارجاعی به DOM اپلیکیشن ندارد و `ui.js` هیچ ارجاعی به `THREE` ندارد. ارتباط تنها از طریق callback و متدهای عمومی است.
+**Architectural note:** `scene.js` has zero references to application DOM and `ui.js` has zero references to `THREE`. Communication happens only through callbacks and public methods.
 
 ---
 
-## 🧪 داده‌ها
+## 🚀 Local Development
 
-هر عنصر شامل: عدد اتمی، نماد، نام لاتین، نام فارسی، جرم اتمی (IUPAC)، دسته‌بندی، دوره، گروه، آرایش الکترونی، فاز در دمای اتاق، نقطه ذوب (K)، نقطه جوش (K)، چگالی، سال کشف و نام کاشف.
+The project has **no build step**, but since it uses **ES Modules**, it must be served over HTTP (direct `file://` opening causes CORS errors).
 
-- دماها بر حسب **کلوین** ذخیره و در UI به‌همراه معادل سلسیوس نمایش داده می‌شوند.
-- چگالی گازها به‌صورت خودکار به **g/L** و جامد/مایع به **g/cm³** تبدیل می‌شود.
-- مقادیر نامعلوم (مثلاً نقطه جوش فرمیم) `null` هستند و با `—` نمایش داده می‌شوند.
-- لایه‌های الکترونی به‌صورت **محاسبه‌شده** از آرایش الکترونی به‌دست می‌آیند (بازکردن بازگشتی هسته‌های `[He]`…`[Rn]`). صحت آن بررسی شده: مجموع الکترون‌های لایه‌ها برای **هر ۱۱۸ عنصر** برابر عدد اتمی است.
-- عناصر فراوانی مصنوعی (Z ≥ ۱۰۴) بر پایه مقادیر پیش‌بینی‌شده گزارش می‌شوند.
----
-
-## 🚀 اجرای محلی
-
-پروژه هیچ مرحله Build ندارد، اما چون از **ES Modules** استفاده می‌کند، باید از طریق HTTP سرو شود (باز کردن مستقیم `file://` باعث خطای CORS می‌شود).
-
-هر کدام از دستورهای زیر کافی است:
+Any of these commands work:
 
 ```bash
 npx serve .
 ```
 
 ```bash
-python -m http.server 8000
+python -m http.server 4173
 ```
 
 ```bash
-php -S localhost:8000
+php -S localhost:4173
 ```
 
-سپس `http://localhost:8000` را در مرورگر باز کنید.
+Then open `http://localhost:4173` in your browser.
 
-> در VS Code افزونه **Live Server** هم بدون هیچ تنظیمی کار می‌کند.
+> VS Code **Live Server** extension also works without any configuration.
 
 ---
 
-## 🌐 وابستگی‌های CDN
+## 🌐 CDN Dependencies
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 ```
 
-نسخه Three.js روی **r128** قفل شده است. `OrbitControls` در این نسخه اسکریپت کلاسیک است و `THREE.OrbitControls` را روی شیء گلوبال می‌نشاند، پس ترتیب دو تگ بالا مهم است.
+Three.js version is locked to **r128**. `OrbitControls` in this version is a classic script that sets `THREE.OrbitControls` on the global object, so the order of these two tags matters.
 
-فونت‌ها: **Vazirmatn** (متن فارسی) و **Orbitron** (اعداد و نمادها) از Google Fonts.
+Fonts: **Vazirmatn** (Persian text) and **Orbitron** (numbers and symbols) from Google Fonts.
 
-### اجرای کاملاً آفلاین (اختیاری)
+### Fully Offline Operation (Optional)
 
-اگر می‌خواهید پروژه بدون اینترنت هم کار کند:
+To run without internet:
 
-1. دو فایل `three.min.js` و `OrbitControls.js` را دانلود و در پوشه `vendor/` بگذارید.
-2. `src` دو تگ script در `index.html` را به `vendor/three.min.js` و `vendor/OrbitControls.js` تغییر دهید.
-3. فونت‌ها را نیز محلی کنید یا تگ `<link>` گوگل‌فونت را حذف کنید (فونت جانشین سیستمی به‌طور خودکار جای آن را می‌گیرد).
----
-
-## ▲ انتشار روی Vercel
-
-پروژه Static است؛ هیچ Build Command یا Install Command لازم نیست. راهنمای کامل در بخش پایانی همین فایل و همچنین در پاسخ همراه آمده است. خلاصه:
-
-1. کل پوشه را در یک ریپازیتوری Git بگذارید (یا از `vercel` CLI استفاده کنید).
-2. در Vercel پروژه را Import کنید.
-3. **Framework Preset** را روی `Other` بگذارید.
-4. **Build Command** را خالی بگذارید و **Output Directory** را `.` قرار دهید.
-5. Deploy.
+1. Download `three.min.js` and `OrbitControls.js` and place in `vendor/` folder
+2. Change `src` of both script tags in `index.html` to `vendor/three.min.js` and `vendor/OrbitControls.js`
+3. Either localize fonts or remove Google Fonts `<link>` tag (system fallback fonts will be used)
 
 ---
 
-## 🎛 راهنمای سریع کاربر
+## ▲ Deploy to Vercel
 
-| عمل | ماوس | لمس | کیبورد |
-|---|---|---|---|
-| چرخش صحنه | درگ چپ | یک انگشت | — |
-| زوم | چرخ ماوس | Pinch | `+` / `-` |
-| جابه‌جایی | درگ راست | دو انگشت | — |
-| انتخاب عنصر | کلیک | تپ | `Enter` در نوار جستجو |
-| فوکوس جستجو | — | — | `/` |
-| بستن پنل | کلیک روی پس‌زمینه | تپ روی پس‌زمینه | `Esc` |
-| چرخش خودکار | دکمه نوار پایین | همان | `R` |
-| بازنشانی دوربین | دکمه نوار پایین | همان | `0` |
-| راهنمای رنگ‌ها | دکمه نوار پایین | همان | `L` |
-| تمام‌صفحه | دکمه نوار پایین | همان | `F` |
+The project is 100% static with no build step required.
+
+### Via Vercel Dashboard
+
+1. Push this repository to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new)
+3. Import your repository
+4. Set **Framework Preset** to `Other`
+5. Leave **Build Command** empty
+6. Set **Output Directory** to `.`
+7. Deploy
+
+### Via Vercel CLI
+
+```bash
+npm install -g vercel
+vercel
+```
+
+Follow the prompts. Vercel will auto-detect it's a static site.
+
+The `vercel.json` file includes proper caching headers and security headers.
 
 ---
 
-## 🌍 پشتیبانی مرورگر
+## 🎯 Use Cases
 
-| مرورگر | حداقل نسخه | وضعیت |
+### Education
+- **Chemistry Students**: Interactive exploration of element properties and periodic trends
+- **Teachers**: Classroom demonstrations with projector-friendly fullscreen mode
+- **Self-Study**: Quiz mode for memorizing elements, categories, and properties
+
+### Research & Reference
+- Quick lookup of element properties with data heatmap visualization
+- Comparison tool for analyzing differences between elements
+- Pattern recognition through 7 different spatial arrangements
+
+### Web Development Learning
+- **WebGL/Three.js**: Study 3D scene management, camera controls, raycasting, post-processing
+- **Vanilla JavaScript**: See how to build complex apps without frameworks
+- **Canvas API**: Learn texture generation and Bohr diagram animation
+- **Progressive Enhancement**: Understand service workers, offline support, and PWA patterns
+- **Internationalization**: Implement multi-language support with RTL handling
+
+---
+
+## 🎨 Customization
+
+### Change Color Palette
+Edit the category colors in `css/style.css`:
+```css
+:root {
+  --c-alkali: #ff3366;
+  --c-transition: #3399ff;
+  /* ... etc */
+}
+```
+
+### Add New Layout
+1. Create a layout function in `js/layouts.js` that returns an array of `{ x, y, z, rx, ry, rz, scale }` objects
+2. Add entry to `LAYOUTS` array with `key`, `fa` (Persian name), `en` (English name), `hint`
+3. Add corresponding icon in `LAYOUT_ICONS` object in `js/ui.js`
+
+### Add More Languages
+1. Add language to `LANGUAGES` array in `js/i18n.js`
+2. Add translations to `TRANSLATIONS` object
+3. Add element names to `RAW` array in `js/periodic-data.js`
+
+---
+
+## 🎮 Keyboard Shortcuts
+
+| Key | Action |
+|---|---|
+| `/` | Focus search input |
+| `Esc` | Close panel / exit mode |
+| `Space` | Random element |
+| `Tab` | Next layout |
+| `1-7` | Jump to specific layout |
+| `R` | Toggle auto-rotate |
+| `0` | Reset camera |
+| `+` / `-` | Zoom in / out |
+| `C` | Compare mode |
+| `Q` | Quiz mode |
+| `P` | Auto tour |
+| `L` | Toggle legend |
+| `F` | Fullscreen |
+| `?` | Help modal |
+| `S` | Screenshot |
+| `←` `→` | Previous/next element (when panel open) |
+
+---
+
+## 🌍 Browser Support
+
+| Browser | Minimum Version | Status |
 |---|---|---|
-| Chrome / Edge | 88+ | کامل |
-| Firefox | 103+ | کامل |
-| Safari (macOS/iOS) | 15.4+ | کامل |
-| Chrome Android | 88+ | کامل (۵۰۰ ذره) |
+| Chrome / Edge | 88+ | Full support |
+| Firefox | 103+ | Full support |
+| Safari (macOS/iOS) | 15.4+ | Full support |
+| Chrome Android | 88+ | Full support (500 particles) |
 
-نیازمندی‌های فنی: WebGL، ES Modules، `backdrop-filter` و `color-mix()`. در نبود `backdrop-filter` از پس‌زمینه مات جانشین استفاده می‌شود.
+Technical requirements: WebGL, ES Modules, `backdrop-filter`, and `color-mix()`. Fallback provided for missing `backdrop-filter`.
 
 ---
 
-## 📄 مجوز
+## 🤝 Contributing
 
-MIT — استفاده آزاد برای اهداف آموزشی و تجاری.
+Contributions welcome! Areas where help is needed:
 
-منابع داده: IUPAC (جرم‌های اتمی ۲۰۲۱)، NIST و CRC Handbook of Chemistry and Physics.
+- **Data accuracy**: Verify element properties against authoritative sources
+- **Translations**: Improve existing translations or add new languages
+- **Accessibility**: Test with screen readers and keyboard-only navigation
+- **Performance**: Optimize for lower-end devices
+- **Documentation**: Expand inline code comments and architectural guides
 
+---
+
+## 📄 License
+
+MIT License - Free to use for educational and commercial purposes.
+
+### Data Sources
+- Atomic masses: IUPAC (2021 standard atomic weights)
+- Properties: NIST Atomic Spectra Database
+- General data: CRC Handbook of Chemistry and Physics (103rd Edition)
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with [Three.js](https://threejs.org/) r128
+- Fonts: [Vazirmatn](https://github.com/rastikerdar/vazirmatn) by Saber Rastikerdar, [Orbitron](https://fonts.google.com/specimen/Orbitron) by Matt McInerney
+- Inspired by the elegance of Dmitri Mendeleev's original periodic table
+
+---
+
+## 📬 Contact
+
+**Author**: Amir Abbas  
+**Email**: amirabbas91a@gmail.com  
+**GitHub**: [Fitroja/periodic-table](https://github.com/Fitroja/periodic-table)
+
+For bug reports and feature requests, please [open an issue](https://github.com/Fitroja/periodic-table/issues).
+
+---
+
+<p align="center">Made with ❤️ for chemistry education worldwide</p>

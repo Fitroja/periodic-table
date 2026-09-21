@@ -5,6 +5,7 @@
  */
 import { PeriodicScene } from './scene.js';
 import { UI } from './ui.js';
+import { i18n, LANGUAGES } from './i18n.js';
 
 const loader = document.getElementById('loader');
 const loaderStatus = document.getElementById('loader-status');
@@ -89,6 +90,9 @@ async function boot() {
     return;
   }
 
+  // Initialize language switcher
+  initLanguageSwitcher(ui);
+
   // ---------------------- حلقه رندر ----------------------
   let last = performance.now();
   let fpsAccum = 0;
@@ -168,3 +172,67 @@ if (document.readyState === 'loading') {
   boot();
 }
 registerServiceWorker();
+
+/* =====================================================================
+   Language Switcher Initialization
+   ===================================================================== */
+function initLanguageSwitcher(ui) {
+  const langBtn = document.getElementById('lang-btn');
+  const langMenu = document.getElementById('lang-menu');
+  const currentLangName = document.getElementById('current-lang-name');
+  const langOptions = document.querySelectorAll('.lang-option');
+
+  if (!langBtn || !langMenu) return;
+
+  // Update current language display
+  function updateLangDisplay() {
+    const langData = i18n.langData;
+    if (currentLangName) {
+      currentLangName.textContent = langData.name;
+    }
+
+    // Update active state
+    langOptions.forEach(opt => {
+      const isActive = opt.dataset.lang === i18n.lang;
+      opt.classList.toggle('active', isActive);
+    });
+  }
+
+  // Toggle menu
+  langBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isExpanded = langBtn.getAttribute('aria-expanded') === 'true';
+    langBtn.setAttribute('aria-expanded', !isExpanded);
+    langMenu.setAttribute('aria-hidden', isExpanded);
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', () => {
+    langBtn.setAttribute('aria-expanded', 'false');
+    langMenu.setAttribute('aria-hidden', 'true');
+  });
+
+  // Language selection
+  langOptions.forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const lang = opt.dataset.lang;
+      if (lang && lang !== i18n.lang) {
+        i18n.setLanguage(lang);
+        updateLangDisplay();
+        
+        // Reload UI with new language
+        if (ui && ui.refreshTranslations) {
+          ui.refreshTranslations();
+        }
+      }
+      
+      // Close menu
+      langBtn.setAttribute('aria-expanded', 'false');
+      langMenu.setAttribute('aria-hidden', 'true');
+    });
+  });
+
+  // Initial display
+  updateLangDisplay();
+}

@@ -47,6 +47,24 @@
       <span class="brand-mark" aria-hidden="true"></span>
     </button>
 
+    <!-- Language Switcher -->
+    <div class="lang-switcher glass">
+      <button id="lang-btn" class="lang-btn" type="button" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+        <svg class="lang-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span id="current-lang-name">فارسی</span>
+        <svg class="chevron" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5"/></svg>
+      </button>
+      <div id="lang-menu" class="lang-menu glass" role="menu" aria-hidden="true">
+        <button class="lang-option" data-lang="fa" role="menuitem"><span class="lang-flag">🇮🇷</span>فارسی</button>
+        <button class="lang-option" data-lang="en" role="menuitem"><span class="lang-flag">🇬🇧</span>English</button>
+        <button class="lang-option" data-lang="zh" role="menuitem"><span class="lang-flag">🇨🇳</span>中文</button>
+        <button class="lang-option" data-lang="ru" role="menuitem"><span class="lang-flag">🇷🇺</span>Русский</button>
+      </div>
+    </div>
+
     <div class="cmd-core glass">
       <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.6-3.6" /></svg>
