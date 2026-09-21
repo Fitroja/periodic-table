@@ -90,9 +90,6 @@ async function boot() {
     return;
   }
 
-  // Initialize language switcher
-  initLanguageSwitcher(ui);
-
   // ---------------------- حلقه رندر ----------------------
   let last = performance.now();
   let fpsAccum = 0;
@@ -144,7 +141,11 @@ async function boot() {
   requestAnimationFrame(frame);
 
   setStatus('آماده است');
-  setTimeout(() => loader && loader.classList.add('done'), 260);
+  setTimeout(() => {
+    if (loader) loader.classList.add('done');
+    // Initialize language switcher after UI is fully loaded
+    initLanguageSwitcher(ui);
+  }, 260);
 
   // بازنشانی زمان پس از تغییر وضعیت تب تا پرش انیمیشن رخ ندهد
   document.addEventListener('visibilitychange', () => {
